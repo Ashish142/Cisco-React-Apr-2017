@@ -1,0 +1,13 @@
+body{
+	margin-left: 50px;
+}
+.field{
+	margin-bottom: 10px;
+}
+label{
+	display: block;
+}
+#divResult{
+	color : red;
+	font-size: 22pt;
+}
