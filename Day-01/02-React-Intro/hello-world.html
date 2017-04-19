@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Hello World!!</title>
+	<script src="react.js"></script>
+	<script src="react-dom.js"></script>
+	<script src="babel.min.js"></script>
+
+	<script>
+		/*
+		var HelloWorld = React.createClass({
+			render : function(){
+				return React.createElement('div', {}, [
+					React.createElement("h1", {}, ["Hello World from React!"])
+				]);
+				
+			}
+		});
+		window.addEventListener("DOMContentLoaded", function(){
+			ReactDOM.render(React.createElement(HelloWorld, {}, null), document.getElementById('content'));
+		});
+		*/
+	</script>
+	<script type="text/babel">
+		var HelloWorld = React.createClass({
+			render : function(){
+				return (
+					<div>
+						<h1>Hello World from React!</h1>
+					</div>
+				);
+				
+			}
+		});
+		
+		ReactDOM.render(<HelloWorld></HelloWorld>, document.getElementById('content'));
+		
+	</script>
+</head>
+<body>
+	<div id="content">
+		
+	</div>
+</body>
+</html>
