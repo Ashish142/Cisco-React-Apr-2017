@@ -3,6 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Hello World!!</title>
+	<style>
+		.highlight{
+			color : red;
+		}
+	</style>
 	<script src="react.js"></script>
 	<script src="react-dom.js"></script>
 	<script src="babel.min.js"></script>
@@ -24,11 +29,11 @@
 				return (
 					<div>
 						<h3>React</h3>
-						<label>Name :</label>
-						<input type="text" ref="txtName" />
+						<label htmlFor="txtName">Name :</label>
+						<input type="text" ref="txtName" id="txtName" />
 						<input type="button" value="Greet" onClick={this.onGreetClick}/>
 						<div id="react-content">
-							<h1>{this.state.message}</h1>
+							<h1 className="highlight">{this.state.message}</h1>
 						</div>
 					</div>
 				)
