@@ -7,7 +7,24 @@
 	<script src="jquery-3.2.1.js"></script>
 
 	<script>
+		//Model
+		class SalaryCalculator{
+			constructor(){
+				this.basic = 0;
+				this.hra = 0;
+				this.da = 0;
+				this.tax = 0;
+				this.salary = 0;
+			}
 
+			calculate(){
+				var gross = this.basic + this.hra + this.da;
+				var net = gross * ((100-this.tax)/100);
+				this.salary = net;
+			}
+		}
+
+		/*
 		function SalaryCalculator(){
 			this.basic = 0;
 			this.hra = 0;
@@ -20,6 +37,7 @@
 			var net = gross * ((100-this.tax)/100);
 			this.salary = net;
 		}
+		*/
 
 
 		$(document).ready(function(){
