@@ -23,7 +23,8 @@
 			},
 			onGreetClick : function(){
 				var greetMessage = 'Hello ' + this.refs.txtName.value + ', Welcome to React!';
-				this.setState({ message : greetMessage})
+				this.state.message = greetMessage;
+				//this.setState({ message : greetMessage});
 			},
 			render : function(){
 				return (
