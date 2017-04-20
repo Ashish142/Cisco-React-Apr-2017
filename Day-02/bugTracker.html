@@ -43,13 +43,14 @@
 	</script>
 	<script type="text/babel">
 		class Bug{
-			constructor(id, name, isClosed=false){
+			constructor(id, name, isClosed){
 				this.id = id;
 				this.name = name;
 				this.isClosed = isClosed;
 			}
 
 			toggle(){
+				console.log(this);
 				this.isClosed = !this.isClosed;
 				console.log('after toggling, bug ->', this);
 			}
@@ -59,7 +60,7 @@
 		class BugsCollection{
 			constructor(){
 				this._list = [
-					{id : 1, name : 'User actions not recognised', isClosed : false}
+					new Bug(1, 'User actions not recognised', false)
 				];
 				this._callbacks = [];
 			}
@@ -89,7 +90,8 @@
 				var bugs = this.props.model.getBugs();
 				var bugItems = bugs.map(bug => (
 					<li key={bug.id}>
-						<span className="bugName">{bug.name}</span>
+						<span className="bugName" onClick={bug.toggle.bind(bug)} >{bug.name}</span>
+						<i>[{bug.isClosed.toString()}]</i>
 					</li>
 				));
 				return (
