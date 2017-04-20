@@ -41,52 +41,80 @@
 		4. Remove Closed bugs
 		5. Display Statistics
 	</script>
+	<script type="text/javascript">
+		/*
+		store
+			- getState()
+			- dispatch(action)
+			- subscribe()
+		action
+			- type
+			- payload
+
+		{type : 'ADD_NEW' payload : 'A new bug'}
+
+		reducer -> function(currentState, action) => newState
+		*/
+
+		function createStore(reducer){
+			var init_action = { type : 'INIT_STATE'}
+			var _state = reducer(undefined, init_action);
+
+			function getState(){
+				return _state;
+			}
+
+			function dispatch(action){
+				var newState = reducer(_state, action);
+				if (newState !== _state){
+					_state = newState;
+					triggerChange();
+				}
+			}
+
+			var _callbacks = [];
+			function triggerChange(){
+				_callbacks.forEach(callbackFn => callbackFn());
+			}
+
+			function subscribe(callbackFn){
+				_callbacks.push(callbackFn);
+			}
+
+			return {
+				getState : getState,
+				dispatch : dispatch,
+				subscribe : subscribe
+			};
+		}
+		
+	</script>
 	<script type="text/babel">
-		class Bug{
-			constructor(id, name, isClosed){
-				this.id = id;
-				this.name = name;
-				this.isClosed = isClosed;
-			}
-
-			toggle(){
-				console.log(this);
-				this.isClosed = !this.isClosed;
-				console.log('after toggling, bug ->', this);
+		
+		function bugsReducer(currentState = [], action){
+			switch(action.type){
+				case 'ADD_NEW':
+					var newBugId = currentState.reduce((result, bug) => result > bug.id ? result : bug.id, 0) + 1;
+					var newBug = {
+						id : newBugId,
+						name : action.payload,
+						isClosed : false
+					}
+					return currentState.concat([newBug]);
+				default :
+					return currentState;
 			}
 		}
+		var store = createStore(bugsReducer)
 
 
-		class BugsCollection{
-			constructor(){
-				this._list = [
-					new Bug(1, 'User actions not recognised', false)
-				];
-				this._callbacks = [];
-			}
-			subscribe(callbackFn){
-				this._callbacks.push(callbackFn);
-			}
-			getBugs(){
-				return this._list;
-			}
-			addNew(bugName){
-				var newBugId = this._list.reduce((result, bug) => result > bug.id ? result : bug.id, 0) + 1;
-				var newBug = new Bug(newBugId, bugName);
-				this._list.push(newBug);
-				this.triggerChange();
-			}
-			triggerChange(){
-				this._callbacks.forEach(callbackFn => callbackFn());
-			}
-
-		}
+		
 		class BugItem extends React.Component{
 			render(){
 				var bug = this.props.model;
 				return (
 					<li>
-						<span className="bugName" onClick={bug.toggle.bind(bug)} >{bug.name}</span>
+						<span className="bugName" >{bug.name}</span>
 						<i>[{bug.isClosed.toString()}]</i>
 					</li>
 				)
@@ -95,10 +123,16 @@
 		class BugTracker extends React.Component{
 			onAddNewClick(){
 				var bugName = this.refs.txtBugName.value;
-				this.props.model.addNew(bugName);
+
+				var newBugAction = {
+					type : 'ADD_NEW',
+					payload : bugName
+				};
+				
+				this.props.store.dispatch(newBugAction);
 			}
 			render(){
-				var bugs = this.props.model.getBugs();
+				var bugs = this.props.store.getState();
 				var bugItems = bugs.map(bug => (
 					<BugItem model={bug} key={bug.id}></BugItem>
 				));
@@ -125,12 +159,12 @@
 			}
 		}
 
-		var bugsCollection = new BugsCollection();
+		
 		function renderApp(){
-			ReactDOM.render(<BugTracker model={bugsCollection}></BugTracker>, document.getElementById('content'));
+			ReactDOM.render(<BugTracker store={store}></BugTracker>, document.getElementById('content'));
 		}
 		renderApp();
-		bugsCollection.subscribe(renderApp);
+		store.subscribe(renderApp);
 	</script>
 </head>
 <body>
