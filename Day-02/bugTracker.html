@@ -42,10 +42,24 @@
 		5. Display Statistics
 	</script>
 	<script type="text/babel">
+		class Bug{
+			constructor(id, name, isClosed=false){
+				this.id = id;
+				this.name = name;
+				this.isClosed = isClosed;
+			}
+
+			toggle(){
+				this.isClosed = !this.isClosed;
+				console.log('after toggling, bug ->', this);
+			}
+		}
+
+
 		class BugsCollection{
 			constructor(){
 				this._list = [
-					{name : 'User actions not recognised', isClosed : false}
+					{id : 1, name : 'User actions not recognised', isClosed : false}
 				];
 				this._callbacks = [];
 			}
@@ -56,10 +70,8 @@
 				return this._list;
 			}
 			addNew(bugName){
-				var newBug = {
-					name : bugName,
-					isClosed : false
-				};
+				var newBugId = this._list.reduce((result, bug) => result > bug.id ? result : bug.id, 0) + 1;
+				var newBug = new Bug(newBugId, bugName);
 				this._list.push(newBug);
 				this.triggerChange();
 			}
@@ -75,6 +87,11 @@
 			}
 			render(){
 				var bugs = this.props.model.getBugs();
+				var bugItems = bugs.map(bug => (
+					<li key={bug.id}>
+						<span className="bugName">{bug.name}</span>
+					</li>
+				));
 				return (
 					<div>
 						<section className="stats">
@@ -90,8 +107,7 @@
 						</section>
 						<section className="list">
 							<ol>
-								<li><span className="bugName">This is Bug - 1</span></li>
-								<li><span className="bugName closed">This is Bug - 2</span></li>
+								{bugItems}
 							</ol>
 						</section>
 					</div>
