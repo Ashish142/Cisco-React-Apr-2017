@@ -71,6 +71,7 @@
 		
 
 		//View
+		/*
 		var SalaryCalculator = React.createClass({
 			onBtnCalculateClick : function(){
 				this.props.calculator.calculate();
@@ -111,21 +112,91 @@
 						<div className="field">
 							<input type="button" value="Calculate" id="btnCalculate" onClick={this.onBtnCalculateClick} />
 						</div>
-						<div className="field">
-							<div id="divResult">{data.salary}</div>
-						</div>
+						<CalculatorSalary data={data.salary} ></CalculatorSalary>
 					</div>
 				)
 			}
-		})
+		});
+		*/
+
+		class SalaryCalculator extends React.Component{
+			onBtnCalculateClick(){
+				this.props.calculator.calculate();
+			}
+			onBasicChange(){
+
+				this.props.calculator.set('basic', parseInt(this.refs.txtBasic.value));
+			}
+			onHraChange(){
+				this.props.calculator.set('hra', parseInt(this.refs.txtHra.value));
+			}
+			onDaChange(){
+				this.props.calculator.set('da', parseInt(this.refs.txtDa.value));
+			}
+			onTaxChange(){
+				this.props.calculator.set('tax', parseInt(this.refs.rangeTax.value));
+			}
+			render(){
+				var data = this.props.calculator.getData();
+				return (
+					<div className="content">
+						<div className="field">
+							<label htmlFor="">Basic :</label>
+							<input type="text" ref="txtBasic" defaultValue={data.basic} onChange={this.onBasicChange.bind(this)}/>
+						</div>
+						<div className="field">
+							<label htmlFor="">HRA :</label>
+							<input type="text" ref="txtHra" defaultValue={data.hra} onChange={this.onHraChange.bind(this)}/>
+						</div>
+						<div className="field">
+							<label htmlFor="">DA :</label>
+							<input type="text" ref="txtDa" defaultValue={data.da} onChange={this.onDaChange.bind(this)}/>
+						</div>
+						<div className="field">
+							<label htmlFor="">Tax :</label>
+							<input type="range" ref="rangeTax" min="0" max="30" defaultValue={data.tax} onChange={this.onTaxChange.bind(this)}/>
+							<span id="spanTax">{data.tax}</span>
+						</div>
+						<div className="field">
+							<input type="button" value="Calculate" id="btnCalculate" onClick={this.onBtnCalculateClick.bind(this)} />
+						</div>
+						<CalculatorSalary data={data.salary} ></CalculatorSalary>
+					</div>
+				)
+			}
+		}
+		/* var CalculatorSalary = React.createClass({
+			render : function(){
+				return (
+					<div className="field">
+							<div id="divResult">{this.props.data}</div>
+						</div>
+				)
+			}
+		}) */
+		/*
+		var CalculatorSalary = function(props){
+			return (
+				<div className="field">
+						<div id="divResult">{props.data}</div>
+					</div>
+			);
+		}
+		*/
+		var CalculatorSalary = (props) => (
+			<div className="field">
+				<div id="divResult">{props.data}</div>
+			</div>
+		);
+		
 		
 
 		var calculator = new SalaryCalculatorModel();
-		function render(){
+		function renderApp(){
 			ReactDOM.render(<SalaryCalculator calculator={calculator}></SalaryCalculator>, document.getElementById('calc'))
 		}
-		render();
-		calculator.subscribe(render);
+		renderApp();
+		calculator.subscribe(renderApp);
 	</script>
 </head>
 <body>
